@@ -1,8 +1,12 @@
 import './App.css'
+import './PromptForm'
+import PromptForm from './PromptForm'
 
 function App() {
   return(
-    <h1>Hello World!</h1>
+    <>
+    <PromptForm />
+    </>
   )
 }
 
