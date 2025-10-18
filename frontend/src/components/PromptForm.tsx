@@ -1,4 +1,4 @@
-import './PromptForm.css'
+import '../css-files/PromptForm.css'
 
 function PromptForm(){
     return(

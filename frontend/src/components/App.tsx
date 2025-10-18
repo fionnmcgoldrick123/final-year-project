@@ -1,4 +1,4 @@
-import './App.css'
+import '../css-files/App.css'
 import './PromptForm'
 import PromptForm from './PromptForm'
 
