@@ -1,6 +1,11 @@
 import '../css-files/PromptForm.css'
 
 function PromptForm(){
+
+    function handleSubmit(){
+        console.log("submitting prompt to backend...");
+    }
+
     return(
         <>
             <div className='prompt-form'>
@@ -8,7 +13,7 @@ function PromptForm(){
 
                 </textarea>
 
-                <button className='submit-button'>Submit</button>
+                <button onClick={handleSubmit} className='submit-button'>Submit</button>
             </div>
         </>
     )
