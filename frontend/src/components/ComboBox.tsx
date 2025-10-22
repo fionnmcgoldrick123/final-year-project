@@ -1,6 +1,6 @@
-function ComboBox({data}: any){
+function ComboBox(){
     return(
-        <h1>{data}</h1>
+        <h1></h1>
     )
 }
 
