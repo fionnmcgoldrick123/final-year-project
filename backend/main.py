@@ -11,32 +11,14 @@ origins = [
 
 class PromptRequest(BaseModel):
     prompt: str
+    
 
-# This variable stores a string. A set of rules that is sent with the users prompt to the AI model. 
-QUIZ_FORMAT_GUIDE = """
-You must format every quiz using this exact JSON structure:
+prompt_guide_file = "./prompt-guide.txt"
 
-{
-  "title": "",
-  "difficulty": "",
-  "questions": [
-    {
-      "question": "",
-      "options": ["A", "B", "C", "D"],
-      "answer": ""
-    }
-  ]
-}
-
-Rules:
-- Never include extra explanations unless specifically asked.
-- Always return valid JSON.
-- Always include exactly 4 multiple-choice options that are closely related and all plausible
-  with only one right answer.
-- Keep questions short and clear.
-
-Now base this quiz off the following prompt:
-"""
+# Reads through 'prompt-guide.txt' and stores it inside QUIZ_FORMAT_GUIDE
+with open(prompt_guide_file, "r", encoding="utf-8") as file:
+    # This variable stores a string. A set of rules that is sent with the users prompt to the AI model. 
+    QUIZ_FORMAT_GUIDE = file.read()
 
 
 app.add_middleware(
@@ -51,10 +33,12 @@ app.add_middleware(
 async def read_root():
     return {"Hello": "World"}
 
-
 @app.post("/prompt")
 async def send_prompt(prompt: PromptRequest):
-    # Here you would typically process the prompt, e.g., send it to a model or service
-    prompt_request =  QUIZ_FORMAT_GUIDE + " \n" + prompt
+    prompt_request =  QUIZ_FORMAT_GUIDE + " \n" + prompt.prompt
+    print(prompt_request)
     return {"response": prompt_request}
 
+@app.get("/health")
+async def health_check():
+    return{"status" : "alive"}

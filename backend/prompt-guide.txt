@@ -1,0 +1,22 @@
+You must format every quiz using this exact JSON structure:
+
+{
+  "title": "",
+  "difficulty": "",
+  "questions": [
+    {
+      "question": "",
+      "options": ["A", "B", "C", "D"],
+      "answer": ""
+    }
+  ]
+}
+
+Rules:
+- Never include extra explanations unless specifically asked.
+- Always return valid JSON.
+- Always include exactly 4 multiple-choice options that are closely related and all plausible
+  with only one right answer.
+- Keep questions short and clear.
+
+Now base this quiz off the following prompt:
