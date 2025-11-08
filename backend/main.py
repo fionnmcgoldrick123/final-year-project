@@ -43,8 +43,27 @@ async def read_root():
 @app.post("/prompt")
 async def send_prompt(prompt: PromptRequest):
     prompt_request =  QUIZ_FORMAT_GUIDE + " \n" + prompt.prompt
-    print(prompt_request)
-    return {"response": prompt_request}
+    
+    url = "https://api.openai.com/v1/chat/completions"
+    
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    
+    payload  = {
+        "model": "gpt-4o-mini",
+        "messages": [
+            {"role": "system", "content": "you are a quiz generation assistant"},
+            {"role": "user", "content": prompt_request}
+        ]
+    }
+    
+    async with httpx.AsyncClient() as client: 
+        response = await client.post(url, headers=headers, json=payload)
+    
+    print(response.json())
+    return response.json()  
 
 @app.get("/health")
 async def health_check():
