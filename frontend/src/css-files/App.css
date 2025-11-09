@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;700&display=swap');
+
+:root{
+  background-color: rgb(39, 44, 54);
+  font-family: "Source Code Pro", monospace;
+  
+}
+
+p{
+    color: orange;
+}
+
+h1{
+    color: orange;
+}
+

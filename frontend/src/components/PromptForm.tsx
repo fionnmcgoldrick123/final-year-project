@@ -6,6 +6,9 @@ function PromptForm(){
     const [prompt, setPrompt] = useState("")
 
     function handleSubmit(){
+
+        setPrompt("")
+
         try{
             fetch('http://127.0.0.1:8000/prompt', {
                 method: 'POST',

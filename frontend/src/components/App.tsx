@@ -1,12 +1,22 @@
-import ComboBox from './ComboBox'
-import './PromptForm'
-import PromptForm from './PromptForm'
+import PromptPage from './PromptPage'
+import '../css-files/App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LandingPage from './LandingPage';
 
 function App() {
   return(
     <>
-    <ComboBox />
-    <PromptForm />
+    <Router>
+
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/prompt" element = {<PromptPage />} />
+      </Routes>
+
+    </Router>
+
+
+
     </>
   )
 }
