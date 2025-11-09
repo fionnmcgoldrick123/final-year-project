@@ -123,6 +123,47 @@ You can now run the model with the following command:
 ollama run llama3.1:8b
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+##  Local LLM Experiments (Ollama)
+
+This project supports running large language models locally using Ollama.
+I experimented with models like `llama3.1:8b` on my machine.
+
+### To try the same setup:
+
+Install [*Ollama*](https://ollama.com/download/windows) for *Windows, Mac or Linux*.
+
+Pull any *Ollama* provided models.
+
+They will be automatically downloaded to the directory: ``C:\Users\<YOUR_USERNAME>\.ollama\models\``. You will find the actual model under the ``model/blobs`` directory where the model is split up into files with hashed file names.
+
+List of models are [here](https://ollama.com/search).
+
+For me I pulled the ``llama3.1:8b``. 
+
+*I selected the llama3.1:8b model because its 8-billion-parameter size provides a strong balance between capability and efficiency. It is large enough to deliver solid reasoning and generation quality, yet still lightweight enough to run locally on a standard laptop without a GPU. This makes it suitable for quick experimentation, offline testing, and integrating local LLM behaviour into my workflow. The model is also easy to install and manage through Ollama, which avoids the need for external API usage.*
+
+```
+ollama pull llama3.1:8b
+```
+
+You can now run the model with the following command: 
+
+```
+ollama run llama3.1:8b
+```
+
 - - -
 
 ### Local LLM Testing (llama3.1:8b)
