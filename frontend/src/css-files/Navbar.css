@@ -1,0 +1,8 @@
+.nav-container{
+    display:flex;
+    gap: 5px;
+}
+
+.nav-button{
+    width: 100px;
+}

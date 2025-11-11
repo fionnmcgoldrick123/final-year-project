@@ -25,7 +25,6 @@ class ModelRequest(BaseModel):
 
 prompt_guide_file = "./prompt-guide.txt"
 
-#default model
 current_model = "openai" 
 
 # Reads through 'prompt-guide.txt' and stores it inside QUIZ_FORMAT_GUIDE
@@ -84,22 +83,24 @@ async def openai_request(prompt: PromptRequest):
 async def llama3_req(prompt: PromptRequest):
     prompt_request =  QUIZ_FORMAT_GUIDE + " \n" + prompt.prompt
     
-    url = "https://api.openai.com/v1/chat/completions"
+    url = "http://localhost:11434/api/generate"
     
     headers = {
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
         "Content-Type": "application/json"
     }
     
     payload  = {
-        "model": "gpt-4o-mini",
-        "messages": [
-            {"role": "system", "content": "you are a quiz generation assistant"},
-            {"role": "user", "content": prompt_request}
-        ]
+        "model": "llama3.1:8b",
+        # just sending base prompt for now to see basic responses
+        "prompt": prompt.prompt,
+        "stream": False,  
     }
     
-    async with httpx.AsyncClient() as client: 
+    timeout = httpx.Timeout(120.0, connect=10.0)
+    
+    print(prompt_request)
+    
+    async with httpx.AsyncClient(timeout = timeout) as client: 
         response = await client.post(url, headers=headers, json=payload)
         
     print(response.json())
@@ -122,7 +123,7 @@ async def change_model(model: ModelRequest):
     current_model = model.model
     
     print(f"Now using {current_model}")
-    return {"message", f"now using {current_model}"}
+    return {"message":  f"now using {current_model}"}
     
         
             
