@@ -1,4 +1,5 @@
 import '../css-files/Navbar.css'
+import '../components/RegisterPage'
 import { useNavigate } from "react-router-dom";
 
 function Navbar(){
@@ -13,6 +14,7 @@ function Navbar(){
         <>
             <div className = "nav-container">
                 <button className="nav-button" onClick={()=> handleClick("/prompt")}>PromptPage</button>
+                <button className="nav-button" onClick={()=> handleClick("/register")}>Register</button>
             </div>
         </>
     )

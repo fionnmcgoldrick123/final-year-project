@@ -6,7 +6,6 @@ import os
 import httpx
 
 load_dotenv()
-
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
@@ -22,10 +21,17 @@ class PromptRequest(BaseModel):
 class ModelRequest(BaseModel):
     model: str
     
+class RegisterRequest(BaseModel):
+    first_name: str
+    second_name: str
+    password: str
+
+    
+print("looping again?")
 
 prompt_guide_file = "./prompt-guide.txt"
 
-current_model = "openai" 
+current_model = "openai"
 
 # Reads through 'prompt-guide.txt' and stores it inside QUIZ_FORMAT_GUIDE
 with open(prompt_guide_file, "r", encoding="utf-8") as file:
@@ -68,17 +74,17 @@ async def openai_request(prompt: PromptRequest):
         "model": "gpt-4o-mini",
         "messages": [
             {"role": "system", "content": "you are a quiz generation assistant"},
-            {"role": "user", "content": prompt_request}
+            {"role": "user", "content": prompt.prompt}
         ]
     }
     
-    async with httpx.AsyncClient() as client: 
+    timeout = httpx.Timeout(120.0, connect=10.0)
+    
+    async with httpx.AsyncClient(timeout = timeout) as client: 
         response = await client.post(url, headers=headers, json=payload)
         
     print(response.json())
     return response.json()  
-
-
     
 async def llama3_req(prompt: PromptRequest):
     prompt_request =  QUIZ_FORMAT_GUIDE + " \n" + prompt.prompt
@@ -98,8 +104,6 @@ async def llama3_req(prompt: PromptRequest):
     
     timeout = httpx.Timeout(120.0, connect=10.0)
     
-    print(prompt_request)
-    
     async with httpx.AsyncClient(timeout = timeout) as client: 
         response = await client.post(url, headers=headers, json=payload)
         
@@ -110,8 +114,10 @@ async def llama3_req(prompt: PromptRequest):
 async def health_check():
     return{"status" : "alive"}
 
-
-
+@app.post("/register")
+async def register_user(user_data: RegisterRequest):
+    print(f"{user_data.first_name}")
+    
 
 @app.post("/model")
 async def change_model(model: ModelRequest):
@@ -124,6 +130,7 @@ async def change_model(model: ModelRequest):
     
     print(f"Now using {current_model}")
     return {"message":  f"now using {current_model}"}
+
     
         
             

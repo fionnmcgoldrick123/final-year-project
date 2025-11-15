@@ -3,14 +3,7 @@
 :root{
   background-color: rgb(39, 44, 54);
   font-family: "Source Code Pro", monospace;
-  
+  color: orange;
 }
 
-p{
-    color: orange;
-}
-
-h1{
-    color: orange;
-}
 
