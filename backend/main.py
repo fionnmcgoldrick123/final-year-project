@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 import httpx
+from db import get_connection
+import bcrypt
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -24,10 +26,8 @@ class ModelRequest(BaseModel):
 class RegisterRequest(BaseModel):
     first_name: str
     second_name: str
+    email: str
     password: str
-
-    
-print("looping again?")
 
 prompt_guide_file = "./prompt-guide.txt"
 
@@ -116,7 +116,27 @@ async def health_check():
 
 @app.post("/register")
 async def register_user(user_data: RegisterRequest):
-    print(f"{user_data.first_name}")
+    
+    password_hash = bcrypt.hashpw(user_data.password.encode(), bcrypt.gensalt()).decode()
+    
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+            INSERT INTO users(first_name, second_name, email, password_hash)
+            VALUES (%s, %s, %s, %s)
+            RETURNING id;
+            """,
+            (
+                user_data.first_name,
+                user_data.second_name,
+                user_data.email,         
+                password_hash
+            )
+            )
+            
+            new_user_id = cur.fetchone()["id"]
+            print(new_user_id)
     
 
 @app.post("/model")
@@ -130,9 +150,3 @@ async def change_model(model: ModelRequest):
     
     print(f"Now using {current_model}")
     return {"message":  f"now using {current_model}"}
-
-    
-        
-            
-        
-    

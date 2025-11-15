@@ -26,11 +26,13 @@ function PromptForm(){
             <div className='prompt-form'>
                 <textarea className='prompt-text-area'
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)} // Update prompt state on input change
+                onChange={(e) => setPrompt(e.target.value)} 
                 placeholder='Enter your prompt here...'
                 >
 
                 </textarea>
+
+                <br></br>
 
                 <button onClick={handleSubmit} className='submit-button'>Submit</button>
             </div>
