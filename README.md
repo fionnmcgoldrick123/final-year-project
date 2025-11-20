@@ -210,6 +210,13 @@ After researching how to modify locally run AI models, *LoRA* appears to be a st
 
 For now, I am going to see if the model operates well with the tasks it's given. If it needs fine-tuning I look towards *LoRA* or *HuggingFace*.
 
+## Custom Classifier Model
+
+### Sources:
+
+[Leetcode Problem Dataset](https://www.kaggle.com/datasets/gzipchrist/leetcode-problem-dataset/data)
+
+[Hugging Face - Codeforces Dataset](https://huggingface.co/datasets/open-r1/codeforces)
 
 
 

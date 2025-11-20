@@ -5,12 +5,14 @@ function PromptForm(){
 
     const [prompt, setPrompt] = useState("")
 
-    function handleSubmit(){
+    async function handleSubmit(){
 
         setPrompt("")
 
+        let response;
+
         try{
-            fetch('http://127.0.0.1:8000/prompt', {
+            response = await fetch('http://127.0.0.1:8000/prompt', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ prompt: prompt })
@@ -18,7 +20,13 @@ function PromptForm(){
         }
         catch(error){
             console.error("Error submitting prompt:", error)
+            return;
         }
+
+        const quiz = await response.json();
+        console.log(quiz);
+
+        
     }
 
     return(

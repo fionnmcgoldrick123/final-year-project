@@ -6,6 +6,7 @@ import os
 import httpx
 from db import get_connection
 import bcrypt
+import json
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -74,7 +75,7 @@ async def openai_request(prompt: PromptRequest):
         "model": "gpt-4o-mini",
         "messages": [
             {"role": "system", "content": "you are a quiz generation assistant"},
-            {"role": "user", "content": prompt.prompt}
+            {"role": "user", "content": prompt_request}
         ]
     }
     
@@ -83,8 +84,18 @@ async def openai_request(prompt: PromptRequest):
     async with httpx.AsyncClient(timeout = timeout) as client: 
         response = await client.post(url, headers=headers, json=payload)
         
-    print(response.json())
-    return response.json()  
+    
+    data = response.json()
+    raw_quiz_string = data["choices"][0]["message"]["content"]
+    
+    try:
+        quiz = json.loads(raw_quiz_string)
+    except json.JSONDecodeError as e:
+        print("JSON parsing failed: ", e)
+        
+    print(f"Parsed quiz object:\n{quiz}")
+    
+    return quiz
     
 async def llama3_req(prompt: PromptRequest):
     prompt_request =  QUIZ_FORMAT_GUIDE + " \n" + prompt.prompt

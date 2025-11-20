@@ -1,4 +1,3 @@
-import ComboBox from "./ComboBox";
 import Navbar from "./Navbar";
 
 function LandingPage(){
@@ -6,8 +5,6 @@ function LandingPage(){
         <>
         <Navbar/>
         <h1>Landing Page</h1>
-        
-        <ComboBox/>
         </>
     )
 }
