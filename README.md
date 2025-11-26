@@ -94,6 +94,24 @@ Frontend will be available at: http://localhost:5173
 
 - - - 
 
+## Key Features
+
+- Multi-language quiz generation **(Python, JS, Java, etc.)**
+
+- Coding sandboxes for multi-language programming **(Judge0, GitHub Codespaces API, ect.)**
+
+- AI-powered question & answer checking for both theory and coding practical quizzes
+
+- Difficulty adaptation using user request & performance
+
+- Difficulty assignment by personal classifier model
+
+- Real backend with REST API
+
+- User accounts & authentication
+
+- Gamification rewarding (XP, streaks, rewards)
+
 ##  Local LLM Experiments (Ollama)
 
 This project supports running large language models locally using Ollama.
@@ -217,6 +235,10 @@ For now, I am going to see if the model operates well with the tasks it's given.
 [Leetcode Problem Dataset](https://www.kaggle.com/datasets/gzipchrist/leetcode-problem-dataset/data)
 
 [Hugging Face - Codeforces Dataset](https://huggingface.co/datasets/open-r1/codeforces)
+
+## Contributors
+
+**Author:** *Fionn McGoldrick* | *G00422349*
 
 
 

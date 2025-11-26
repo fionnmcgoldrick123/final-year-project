@@ -84,7 +84,7 @@ async def openai_request(prompt: PromptRequest):
     async with httpx.AsyncClient(timeout = timeout) as client: 
         response = await client.post(url, headers=headers, json=payload)
         
-    
+
     data = response.json()
     raw_quiz_string = data["choices"][0]["message"]["content"]
     
@@ -92,6 +92,7 @@ async def openai_request(prompt: PromptRequest):
         quiz = json.loads(raw_quiz_string)
     except json.JSONDecodeError as e:
         print("JSON parsing failed: ", e)
+        return{"Error" : "Failed to parse JSON"}
         
     print(f"Parsed quiz object:\n{quiz}")
     
