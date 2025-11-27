@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 import httpx
 from db import get_connection
 import bcrypt
 import json
+from pydantic_models import PromptRequest, RegisterRequest, ModelRequest
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -18,23 +18,11 @@ origins = [
     "http://127.0.0.1:8000",
 ]
 
-class PromptRequest(BaseModel):
-    prompt: str
-
-class ModelRequest(BaseModel):
-    model: str
-    
-class RegisterRequest(BaseModel):
-    first_name: str
-    second_name: str
-    email: str
-    password: str
-
-prompt_guide_file = "./prompt-guide.txt"
+prompt_guide_file = "./prompt_guide.txt"
 
 current_model = "openai"
 
-# Reads through 'prompt-guide.txt' and stores it inside QUIZ_FORMAT_GUIDE
+# Reads through 'prompt_guide.txt' and stores it inside QUIZ_FORMAT_GUIDE
 with open(prompt_guide_file, "r", encoding="utf-8") as file:
     # This variable stores a string. A set of rules that is sent with the users prompt to the AI model. 
     QUIZ_FORMAT_GUIDE = file.read()
@@ -84,19 +72,9 @@ async def openai_request(prompt: PromptRequest):
     async with httpx.AsyncClient(timeout = timeout) as client: 
         response = await client.post(url, headers=headers, json=payload)
         
-
-    data = response.json()
-    raw_quiz_string = data["choices"][0]["message"]["content"]
+    print(response.json())
+    print(response)
     
-    try:
-        quiz = json.loads(raw_quiz_string)
-    except json.JSONDecodeError as e:
-        print("JSON parsing failed: ", e)
-        return{"Error" : "Failed to parse JSON"}
-        
-    print(f"Parsed quiz object:\n{quiz}")
-    
-    return quiz
     
 async def llama3_req(prompt: PromptRequest):
     prompt_request =  QUIZ_FORMAT_GUIDE + " \n" + prompt.prompt
@@ -128,6 +106,8 @@ async def health_check():
 
 @app.post("/register")
 async def register_user(user_data: RegisterRequest):
+    
+    # TODO: check if user already exists here
     
     password_hash = bcrypt.hashpw(user_data.password.encode(), bcrypt.gensalt()).decode()
     
@@ -162,3 +142,6 @@ async def change_model(model: ModelRequest):
     
     print(f"Now using {current_model}")
     return {"message":  f"now using {current_model}"}
+
+
+# TODO: Method for parsing multiple types of AI responses

@@ -1,17 +1,17 @@
 import '../css-files/PromptForm.css'
 import { useState } from 'react'
-import ClipLoader from "react-spinners/ClipLoader";
+// import ClipLoader from "react-spinners/ClipLoader";
 import LandingPage from './LandingPage';
 
 function PromptForm(){
 
     const [prompt, setPrompt] = useState("")
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
     async function handleSubmit(){
 
         setPrompt("")
-        setLoading(true);
+        // setLoading(true);
 
         let response;
 
@@ -32,7 +32,7 @@ function PromptForm(){
         const quiz = await response.json();
         console.log(quiz);
 
-         setLoading(false);
+         // setLoading(false);
         < LandingPage />
         
     }
@@ -51,14 +51,6 @@ function PromptForm(){
                 <br></br>
 
                 <button onClick={handleSubmit} className='submit-button'>Submit</button>
-
-                {loading && (
-                    <div style={{ marginTop: "20px" }}>
-                        <ClipLoader color="#36d7b7" size={50} />
-                    </div>
-                )}
-
-
             </div>
         </>
     )
