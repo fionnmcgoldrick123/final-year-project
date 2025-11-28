@@ -7,6 +7,7 @@ from db import get_connection
 import bcrypt
 import json
 from pydantic_models import PromptRequest, RegisterRequest, ModelRequest
+from parsers.parser_openai import openai_parser
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -73,7 +74,10 @@ async def openai_request(prompt: PromptRequest):
         response = await client.post(url, headers=headers, json=payload)
         
     print(response.json())
-    print(response)
+    
+    parsed_quiz = openai_parser(response.json())
+    print(f"\n\n\n{parsed_quiz}")
+    return parsed_quiz
     
     
 async def llama3_req(prompt: PromptRequest):

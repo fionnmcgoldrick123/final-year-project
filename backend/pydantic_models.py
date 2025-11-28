@@ -2,6 +2,7 @@ from typing import List
 from pydantic import BaseModel
 
 class QuizSchema(BaseModel):
+    title: str
     question: str
     options: List[str]
     correct_answer: str

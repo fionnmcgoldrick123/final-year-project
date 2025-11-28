@@ -1,11 +1,12 @@
 import '../css-files/PromptForm.css'
 import { useState } from 'react'
 // import ClipLoader from "react-spinners/ClipLoader";
-import LandingPage from './LandingPage';
+import { useNavigate } from "react-router-dom";
 
 function PromptForm(){
 
     const [prompt, setPrompt] = useState("")
+    const navigate = useNavigate()
     // const [loading, setLoading] = useState(false);
 
     async function handleSubmit(){
@@ -21,19 +22,19 @@ function PromptForm(){
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ prompt: prompt })
             })
-
-            
         }
         catch(error){
             console.error("Error submitting prompt:", error)
             return;
         }
 
+        
         const quiz = await response.json();
-        console.log(quiz);
+        console.log("Quiz from backend:", quiz);
+            
+        navigate('/quiz', { state: { quizData: quiz } });
 
          // setLoading(false);
-        < LandingPage />
         
     }
 
