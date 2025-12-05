@@ -38,12 +38,24 @@ app.add_middleware(
     allow_headers=["*"],            
 )
 
+# --- Endpoints ---
+
 @app.get("/")
 async def read_root():
     return {"Hello": "World"}
 
 @app.post("/prompt")
-async def send_prompt(prompt: PromptRequest):    
+async def send_prompt(prompt: PromptRequest):  
+    """
+    Takes in a prompt from the user and sends it to the currently selected model by
+    using the global 'current_model' variable.
+    
+    Args:
+        prompt (PromptRequest): The prompt request object containing the user's prompt.
+        
+    Returns:
+        Parsed quiz data from the selected model.
+    """  
     global current_model
     if current_model == "openai":
         return await openai_request(prompt)
@@ -52,6 +64,17 @@ async def send_prompt(prompt: PromptRequest):
         
 
 async def openai_request(prompt: PromptRequest):
+    """
+    Determines the appropriate headers, payload, and URL for the OpenAI API request.
+    Sends the request and processes the response using the openai_parser.
+    Returns the parsed quiz data to the caller (send_prompt()).
+    
+    Args:
+        prompt (PromptRequest): The prompt request object containing the user's prompt.
+        
+    Returns:
+        Parsed quiz data from the OpenAI model.
+    """
     prompt_request =  QUIZ_FORMAT_GUIDE + " \n" + prompt.prompt
     
     url = "https://api.openai.com/v1/chat/completions"
@@ -76,12 +99,24 @@ async def openai_request(prompt: PromptRequest):
         
     print(response.json())
     
+    # Use the OpenAI parser to parse the response
     parsed_quiz = openai_parser(response.json())
     print(f"\n\n\n{parsed_quiz}")
     return parsed_quiz
     
     
 async def llama3_req(prompt: PromptRequest):
+    """
+    Determines the appropriate headers, payload, and URL for the local ollama API request.
+    Sends the request and processes the response using the ollama_parser.
+    Returns the parsed quiz data to the caller (send_prompt()).
+    
+    Args:
+        prompt (PromptRequest): The prompt request object containing the user's prompt.
+        
+    Returns:
+        Parsed quiz data from the local ollama model.
+    """
     prompt_request =  QUIZ_FORMAT_GUIDE + " \n" + prompt.prompt
     
     url = "http://localhost:11434/api/generate"
@@ -92,7 +127,6 @@ async def llama3_req(prompt: PromptRequest):
     
     payload  = {
         "model": "llama3.1:8b",
-        # just sending base prompt for now to see basic responses
         "prompt": prompt_request,
         "stream": False,  
     }
@@ -113,10 +147,23 @@ async def health_check():
 
 @app.post("/register")
 async def register_user(user_data: RegisterRequest):
-    # TODO: check if user already exists here
+    """
+    Registers a new user by inserting their data into the database.
+    Args:
+        user_data (RegisterRequest): The registration request object containing user details.
+        
+    Returns:
+        dict: A success message or an error if the user already exists.
+        
+    """
     
+    if await user_exists(user_data.email):
+        return {"error": "User already exists"}
+    
+    # Hash the user's password using bcrypt before storing it.
     password_hash = bcrypt.hashpw(user_data.password.encode(), bcrypt.gensalt()).decode()
     
+    # Connect to the database and use a cursor to execute the insert statement
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
@@ -136,6 +183,28 @@ async def register_user(user_data: RegisterRequest):
             new_user_id = cur.fetchone()["id"]
             print(new_user_id)
     
+async def user_exists(email: str) -> bool:
+    """
+    Checks if a user with the given email already exists in the database.
+    
+    Args:
+        email (str): The email address to check.
+        
+    Returns:
+        bool: True if the user exists, False otherwise.
+    """
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT 1
+                FROM users
+                WHERE email = %s
+                LIMIT 1;
+                """,
+                (email,)
+            )
+            return cur.fetchone() is not None
 
 @app.post("/model")
 async def change_model(model: ModelRequest):
