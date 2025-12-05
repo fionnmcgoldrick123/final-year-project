@@ -8,6 +8,7 @@ import bcrypt
 import json
 from pydantic_models import PromptRequest, RegisterRequest, ModelRequest
 from parsers.parser_openai import openai_parser
+from parsers.parser_ollama import ollama_parser
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -92,7 +93,7 @@ async def llama3_req(prompt: PromptRequest):
     payload  = {
         "model": "llama3.1:8b",
         # just sending base prompt for now to see basic responses
-        "prompt": prompt.prompt,
+        "prompt": prompt_request,
         "stream": False,  
     }
     
@@ -102,7 +103,9 @@ async def llama3_req(prompt: PromptRequest):
         response = await client.post(url, headers=headers, json=payload)
         
     print(response.json())
-    return response.json()  
+    parsed_quiz = ollama_parser(response.json())
+    print(f"\n\n\n{parsed_quiz}")
+    return parsed_quiz
 
 @app.get("/health")
 async def health_check():
@@ -110,7 +113,6 @@ async def health_check():
 
 @app.post("/register")
 async def register_user(user_data: RegisterRequest):
-    
     # TODO: check if user already exists here
     
     password_hash = bcrypt.hashpw(user_data.password.encode(), bcrypt.gensalt()).decode()
@@ -146,6 +148,3 @@ async def change_model(model: ModelRequest):
     
     print(f"Now using {current_model}")
     return {"message":  f"now using {current_model}"}
-
-
-# TODO: Method for parsing multiple types of AI responses

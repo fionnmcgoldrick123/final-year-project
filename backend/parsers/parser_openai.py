@@ -25,9 +25,6 @@ def openai_parser(response : dict) -> QuizSchema:
                 correct_answer=q["answer"],
             )
         )
-        print(q)
-        print(f"question added: {q['question']}")
-
     return questions
 
     
