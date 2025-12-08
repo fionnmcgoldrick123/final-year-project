@@ -20,16 +20,6 @@ def ollama_parser(response: dict) -> list[QuizSchema]:
     """
     content = response["response"]
 
-    content = re.sub(r'"\s*([A-D])"]\s*', r'"\1: ', content)
-
-    def fix_options(match):
-        block = match.group(1)
-        opts = re.findall(r'"[^"]*"', block)
-        return '"options": [' + ", ".join(opts) + "]"
-
-    content = re.sub(r'"options":\s*\[(.*?)\]', fix_options, content, flags=re.DOTALL)
-
-    content = re.sub(r',\s*([}\]])', r'\1', content)
 
     try:
         data = json.loads(content)

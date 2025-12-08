@@ -21,8 +21,11 @@ function QuizPage() {
 
     const currentQ = quiz[currentIndex];
 
-    function handleAnswer(option: string) {
-        const isCorrect = option === currentQ.correct_answer;
+    function handleAnswer(option: string, index: number) {
+        console.log("Selected option:", option);
+
+        const letterFromIndex = ["A", "B", "C", "D"][index];
+        const isCorrect = letterFromIndex === currentQ.correct_answer;
 
         if (!isCorrect) {
             alert("Incorrect! Try again.");
@@ -31,11 +34,11 @@ function QuizPage() {
 
         if (currentIndex + 1 < quiz.length) {
             setCurrentIndex(currentIndex + 1);
-            console.log("Correct!");
         } else {
             setFinished(true);
         }
     }
+
 
     if (finished) {
         <h1>Quiz Complete! 🎉</h1>;
@@ -53,18 +56,12 @@ function QuizPage() {
             <h3>{currentQ.question}</h3>
 
             {currentQ.options.map((opt: string, i: number) => (
-                <button 
-                    key={i}
-                    onClick={() => handleAnswer(opt)}
-                    style={{
-                        display: "block",
-                        margin: "0.5rem 0",
-                        padding: "0.75rem 1rem",
-                        fontSize: "1rem"
-                    }}
-                >
-                    {opt}
-                </button>
+                <div key={i}>
+                    <button onClick={() => handleAnswer(opt, i)}>
+                        {opt}
+                    </button>
+                    <br/>
+                </div>
             ))}
         </div>
     );
