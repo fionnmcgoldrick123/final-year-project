@@ -1,22 +1,27 @@
-You must format every quiz using this exact JSON structure:
+You MUST output ONLY valid JSON. No explanations, no text before or after.
+If you cannot fully comply, output an empty JSON object {}.
+
+You MUST follow this exact schema:
 
 {
-  "title": "",
-  "difficulty": "",
+  "title": "string",
+  "difficulty": "string",
   "questions": [
     {
-      "question": "",
-      "options": ["A", "B", "C", "D"],
-      "answer": ""
+      "question": "string",
+      "options": ["string", "string", "string", "string"],
+      "answer": "A"
     }
   ]
 }
 
 Rules:
-- Never include extra explanations unless specifically asked.
-- Always return valid JSON.
-- Always include exactly 4 multiple-choice options that are closely related and all plausible
-  with only one right answer.
-- Keep questions short and clear.
-
-Now base this quiz off the following prompt:
+- Titles and questions must be strings.
+- Options must be an array of exactly 4 strings.
+- Answer must be one of: "A", "B", "C", "D".
+- Never include labels like "A:" inside the option text.
+- Never include commas outside JSON.
+- Never include markdown formatting.
+- Never include commentary.
+- Never include backticks.
+- The final output MUST be a single JSON object.

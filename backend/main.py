@@ -157,6 +157,7 @@ async def register_user(user_data: RegisterRequest):
         
     """
     
+    # Check if user already exists
     if await user_exists(user_data.email):
         return {"error": "User already exists"}
     
@@ -193,6 +194,7 @@ async def user_exists(email: str) -> bool:
     Returns:
         bool: True if the user exists, False otherwise.
     """
+
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
