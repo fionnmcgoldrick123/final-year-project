@@ -15,6 +15,7 @@ function Navbar(){
             <div className = "nav-container">
                 <button className="nav-button" onClick={()=> handleClick("/prompt")}>PromptPage</button>
                 <button className="nav-button" onClick={()=> handleClick("/register")}>Register</button>
+                <button className='nav-button' onClick={()=>handleClick("/")}>Landing Page</button>
             </div>
         </>
     )

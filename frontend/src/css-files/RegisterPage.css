@@ -1,0 +1,237 @@
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    font-family: 'Fira Code', monospace;
+    perspective: 1000px;
+}
+
+.flip-card {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    height: 600px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flip-card.flipped {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front form,
+.flip-card-back form {
+    background: linear-gradient(135deg, #2d2d2d 0%, #333333 100%);
+    border: 2px solid #404040;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.flip-card form h1 {
+    color: #ff9500;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.flip-button {
+    position: absolute;
+    right: -50px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff9500 0%, #ff7700 100%);
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 149, 0, 0.3);
+    z-index: 10;
+}
+
+.flip-button:hover {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 149, 0, 0.5);
+}
+
+.flip-button:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.label {
+    display: block;
+    color: #ff9500;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.register-container form input {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border: 2px solid #404040;
+    border-radius: 8px;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.register-container form input:focus {
+    outline: none;
+    border-color: #ff9500;
+    box-shadow: 0 0 16px rgba(255, 149, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.register-container form input::placeholder {
+    color: #808080;
+}
+
+.register-container form button {
+    width: 100%;
+    padding: 12px 16px;
+    margin-top: 24px;
+    background: linear-gradient(135deg, #ff9500 0%, #ff7700 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Fira Code', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 149, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.register-container form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 149, 0, 0.5);
+}
+
+.register-container form button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(255, 149, 0, 0.3);
+}
+
+.react-password-strength-bar {
+    margin: 16px 0 !important;
+}
+
+.react-password-strength-bar_bar {
+    background-color: #404040 !important;
+    border-radius: 6px !important;
+    height: 6px !important;
+}
+
+.react-password-strength-bar_fill {
+    background: linear-gradient(90deg, #ff7700, #ff9500) !important;
+    border-radius: 6px !important;
+}
+
+.react-password-strength-bar_fill.short {
+    width: 25% !important;
+    background: #d32f2f !important;
+}
+
+.react-password-strength-bar_fill.weak {
+    width: 50% !important;
+    background: #f57c00 !important;
+}
+
+.react-password-strength-bar_fill.fair {
+    width: 75% !important;
+    background: #fbc02d !important;
+}
+
+.react-password-strength-bar_fill.strong {
+    width: 100% !important;
+    background: #388e3c !important;
+}
+
+.react-password-strength-bar_label {
+    color: #a0a0a0 !important;
+    font-family: 'Fira Code', monospace !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+@media (max-width: 768px) {
+    .register-container {
+        padding: 20px 10px;
+        min-height: auto;
+    }
+
+    .flip-card {
+        height: auto;
+    }
+
+    .flip-card-front form,
+    .flip-card-back form {
+        padding: 30px 20px;
+    }
+
+    .label {
+        font-size: 12px;
+    }
+
+    .register-container form input {
+        font-size: 13px;
+        padding: 10px 14px;
+    }
+
+    .register-container form button {
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+
+    .flip-button {
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+}

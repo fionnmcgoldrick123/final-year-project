@@ -1,3 +1,5 @@
+import '../css-files/ComboBox.css'
+
 function ComboBox(){
 
     function handleChange(e : React.ChangeEvent<HTMLSelectElement>){
@@ -17,14 +19,15 @@ function ComboBox(){
         }
 
     return(
-    
-        <select defaultValue="" onChange={handleChange}>
-            <option value="" disabled hidden>
-                Choose a model…
-            </option>
-            <option value = "openai">OpenAi</option>
-            <option value = "llama3.1:8b">Llama3.1:8b</option>
-        </select>
+        <div className='combo-box-container'>
+            <select className='model-select' defaultValue="" onChange={handleChange}>
+                <option value="" disabled hidden>
+                    Choose a model…
+                </option>
+                <option value="openai">OpenAi</option>
+                <option value="llama3.1:8b">Llama3.1:8b</option>
+            </select>
+        </div>
     )
 }
 
