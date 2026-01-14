@@ -1,9 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;700&display=swap');
 
-:root{
-  background-color: rgb(39, 44, 54);
+
+:root {
   font-family: "Source Code Pro", monospace;
   color: orange;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
 }
 
 

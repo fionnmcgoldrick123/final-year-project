@@ -54,35 +54,35 @@ function RegisterPage() {
 
     return (
         <>
-
         <Navbar/>
-
+        <h1 style={{textAlign: 'center', color: '#ff9500', marginTop: '32px', marginBottom: '0', background: 'transparent'}}>Register</h1>
             <div className="register-container">
-                <form onSubmit={handleSubmit}>
-                    <h1>Register</h1>
-                    <label className="label">First Name</label><br></br>
-                    <input type="text"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)} /><br></br>
+                <div className="register-form-box">
+                    <form onSubmit={handleSubmit}>
+                        <label className="label">First Name</label>
+                        <input type="text"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)} />
 
-                    <label className="label">Second Name</label><br></br>
-                    <input type="text"
-                        value={secondName}
-                        onChange={(e) => setSecondName(e.target.value)} /><br></br>
+                        <label className="label">Second Name</label>
+                        <input type="text"
+                            value={secondName}
+                            onChange={(e) => setSecondName(e.target.value)} />
 
-                    <label className="label">Email</label><br></br>
-                    <input type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)} /><br></br>
+                        <label className="label">Email</label>
+                        <input type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)} />
 
-                    <label className="label">Password</label><br></br>
-                    <input type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)} /><br></br>
-                    <PasswordStrengthBar style={{ width: 160 }} password={password} /><br></br>
+                        <label className="label">Password</label>
+                        <input type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)} />
+                        <PasswordStrengthBar style={{ width: 160 }} password={password} />
 
-                    <button type="submit">Register</button>
-                </form>
+                        <button type="submit">Register</button>
+                    </form>
+                </div>
             </div>
         </>
     )
