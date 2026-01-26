@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/AuthContext";
 import '../css-files/LandingPage.css'
 
 function LandingPage(){
     const navigate = useNavigate();
+    const { user, isAuthenticated } = useAuth();
     const [displayedText, setDisplayedText] = useState("");
     const [currentPhrase, setCurrentPhrase] = useState(0);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -47,7 +49,15 @@ function LandingPage(){
             <div className="landing-left">
                 <div>
                     <h1 className="landing-title">
-                        Welcome to <span className="highlight">CodeQuiz</span>
+                        {isAuthenticated && user ? (
+                            <>
+                                Welcome back, <span className="highlight">{user.first_name}!</span>
+                            </>
+                        ) : (
+                            <>
+                                Welcome to <span className="highlight">CodeQuiz</span>
+                            </>
+                        )}
                     </h1>
                     <p className="landing-subtitle">
                         Test your programming knowledge with AI-powered quizzes and real-time feedback

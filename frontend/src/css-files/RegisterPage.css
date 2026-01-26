@@ -7,6 +7,8 @@
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
     font-family: 'Fira Code', monospace;
     perspective: 1000px;
+}
+
 /* Box around the form and button, not the heading */
 .register-form-box {
     background: linear-gradient(135deg, #232323 0%, #333333 100%);
@@ -21,6 +23,35 @@
     width: 100%;
     max-width: 370px;
 }
+
+.error-message {
+    background: rgba(255, 85, 85, 0.1);
+    border: 1px solid #ff5555;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    color: #ff5555;
+    font-size: 13px;
+    text-align: center;
+}
+
+.auth-switch-text {
+    text-align: center;
+    color: #a0a0a0;
+    font-size: 12px;
+    margin-top: 16px;
+}
+
+.auth-switch-link {
+    color: #ff9500;
+    cursor: pointer;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.auth-switch-link:hover {
+    color: #ff7700;
+    text-decoration: underline;
 }
 
 .flip-card {

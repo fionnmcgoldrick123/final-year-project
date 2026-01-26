@@ -94,6 +94,37 @@ Frontend will be available at: http://localhost:5173
 
 - - - 
 
+## Project Structure
+
+```
+FinalYearProject/
+├── backend/                      # FastAPI backend server
+│   ├── main.py                  # FastAPI application entry point
+│   ├── db.py                    # Database models and connection
+│   ├── pydantic_models.py       # Data validation models
+│   ├── prompt_guide.txt         # LLM prompt formatting guide
+│   ├── requirements.txt         # Python dependencies
+│   └── parsers/                 # LLM response parsers
+│       ├── parser_ollama.py     # Ollama model parser
+│       └── parser_openai.py     # OpenAI model parser
+│
+├── frontend/                     # React + Vite + TypeScript frontend
+│   ├── src/
+│   │   ├── components/          # Reusable React components
+│   │   ├── css-files/           # Styling
+│   │   └── utils/               # Utility functions
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── classifier-model/             # PyTorch classifier model
+│   ├── classifier_model.py      # Model architecture and utilities
+│   └── requirements.txt         # Model dependencies
+│
+└── docs/                         # Documentation and assets
+```
+
+- - - 
+
 ## Key Features
 
 - Multi-language quiz generation **(Python, JS, Java, etc.)**
@@ -189,7 +220,49 @@ For now, I am going to see if the model operates well with the tasks it's given.
 
 ## Custom Classifier Model
 
-### Sources:
+A PyTorch-based classifier model designed to adaptively determine quiz difficulty and personalize question selection based on user performance and skill level.
+
+### Setup (Classifier Model)
+
+Navigate to the classifier-model directory:
+
+```bash
+cd classifier-model
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it:
+
+```bash
+source venv/bin/activate      # macOS/Linux
+venv\Scripts\activate         # Windows
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Dependencies
+
+The classifier model utilizes:
+- **PyTorch:** Deep learning framework (torch, torchaudio, torchvision)
+- **Pandas:** Data manipulation and analysis
+- **Scikit-Learn:** Machine learning utilities (preprocessing, model evaluation, pipeline)
+- **NumPy:** Numerical computing
+- **SciPy:** Scientific computing
+
+### Current Status
+
+The model structure is initialized with a basic fully-connected neural network architecture. Data loading and training pipelines are templated for future implementation once the model's purpose and dataset are finalized.
+
+### Data Sources (Future)
 
 [Leetcode Problem Dataset](https://www.kaggle.com/datasets/gzipchrist/leetcode-problem-dataset/data)
 

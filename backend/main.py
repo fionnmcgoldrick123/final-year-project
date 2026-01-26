@@ -1,19 +1,26 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 import os
 import httpx
 from db import get_connection
 import bcrypt
+import jwt
+from datetime import datetime, timedelta
 import json
-from pydantic_models import PromptRequest, RegisterRequest, ModelRequest
+from pydantic_models import PromptRequest, RegisterRequest, ModelRequest, LoginRequest, UserResponse
 from parsers.parser_openai import openai_parser
 from parsers.parser_ollama import ollama_parser
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key-change-in-production")
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRATION_HOURS = 24
 
 app = FastAPI()
+security = HTTPBearer()
 
 origins = [
     "http://localhost:5173",
@@ -219,3 +226,113 @@ async def change_model(model: ModelRequest):
     
     print(f"Now using {current_model}")
     return {"message":  f"now using {current_model}"}
+
+# --- JWT Helper Functions ---
+
+def create_access_token(user_id: int, email: str) -> str:
+    """Create a JWT access token for a user."""
+    payload = {
+        "user_id": user_id,
+        "email": email,
+        "exp": datetime.utcnow() + timedelta(hours=JWT_EXPIRATION_HOURS),
+        "iat": datetime.utcnow()
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
+    """Verify JWT token and return the payload."""
+    try:
+        token = credentials.credentials
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return payload
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+# --- Login Endpoint ---
+
+@app.post("/login")
+async def login(login_data: LoginRequest):
+    """
+    Authenticate a user and return a JWT token.
+    
+    Args:
+        login_data (LoginRequest): The login request containing email and password.
+        
+    Returns:
+        dict: JWT token and user data or an error message.
+    """
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, first_name, second_name, email, password_hash, exp, level, created_at, updated_at
+                FROM users
+                WHERE email = %s
+                LIMIT 1;
+                """,
+                (login_data.email,)
+            )
+            user = cur.fetchone()
+    
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    # Verify password
+    if not bcrypt.checkpw(login_data.password.encode(), user["password_hash"].encode()):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    # Create JWT token
+    token = create_access_token(user["id"], user["email"])
+    
+    return {
+        "token": token,
+        "user": {
+            "id": user["id"],
+            "first_name": user["first_name"],
+            "second_name": user["second_name"],
+            "email": user["email"],
+            "exp": user["exp"],
+            "level": user["level"],
+            "created_at": user["created_at"].isoformat() if user["created_at"] else None,
+            "updated_at": user["updated_at"].isoformat() if user["updated_at"] else None
+        }
+    }
+
+# --- Get Current User Endpoint ---
+
+@app.get("/me")
+async def get_current_user(token_data: dict = Depends(verify_token)):
+    """
+    Get the current authenticated user's profile.
+    
+    Returns:
+        dict: User profile data.
+    """
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, first_name, second_name, email, exp, level, created_at, updated_at
+                FROM users
+                WHERE id = %s
+                LIMIT 1;
+                """,
+                (token_data["user_id"],)
+            )
+            user = cur.fetchone()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {
+        "id": user["id"],
+        "first_name": user["first_name"],
+        "second_name": user["second_name"],
+        "email": user["email"],
+        "exp": user["exp"],
+        "level": user["level"],
+        "created_at": user["created_at"].isoformat() if user["created_at"] else None,
+        "updated_at": user["updated_at"].isoformat() if user["updated_at"] else None
+    }
