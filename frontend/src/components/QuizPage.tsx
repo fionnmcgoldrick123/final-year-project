@@ -1,5 +1,135 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Navbar from "./Navbar";
+
+const quizStyles = {
+    container: {
+        minHeight: '100vh',
+        backgroundColor: '#1a1a1a',
+        padding: '0',
+    },
+    content: {
+        maxWidth: '800px',
+        margin: '0 auto',
+        padding: '2rem',
+    },
+    card: {
+        backgroundColor: '#2d2d2d',
+        borderRadius: '16px',
+        padding: '2rem',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        border: '1px solid #3d3d3d',
+    },
+    progressBar: {
+        backgroundColor: '#3d3d3d',
+        borderRadius: '8px',
+        height: '8px',
+        marginBottom: '1.5rem',
+        overflow: 'hidden' as const,
+    },
+    progressFill: (progress: number) => ({
+        backgroundColor: '#ff9500',
+        height: '100%',
+        width: `${progress}%`,
+        transition: 'width 0.3s ease',
+        borderRadius: '8px',
+    }),
+    progressText: {
+        color: '#808080',
+        fontSize: '0.9rem',
+        marginBottom: '0.5rem',
+        fontFamily: "'Fira Code', monospace",
+    },
+    title: {
+        color: '#ff9500',
+        fontSize: '1.5rem',
+        marginBottom: '1rem',
+        fontFamily: "'Fira Code', monospace",
+        fontWeight: 600,
+    },
+    question: {
+        color: '#ffffff',
+        fontSize: '1.25rem',
+        marginBottom: '2rem',
+        fontFamily: "'Fira Code', monospace",
+        lineHeight: 1.6,
+    },
+    optionsContainer: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '1rem',
+    },
+    optionButton: {
+        backgroundColor: '#3d3d3d',
+        color: '#e0e0e0',
+        border: '2px solid #4d4d4d',
+        borderRadius: '12px',
+        padding: '1rem 1.5rem',
+        fontSize: '1rem',
+        fontFamily: "'Fira Code', monospace",
+        cursor: 'pointer',
+        textAlign: 'left' as const,
+        transition: 'all 0.2s ease',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1rem',
+    },
+    optionLetter: {
+        backgroundColor: '#ff9500',
+        color: '#1a1a1a',
+        width: '32px',
+        height: '32px',
+        borderRadius: '8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 700,
+        flexShrink: 0,
+    },
+    emptyState: {
+        textAlign: 'center' as const,
+        padding: '4rem 2rem',
+    },
+    emptyText: {
+        color: '#808080',
+        fontSize: '1.1rem',
+        marginBottom: '1.5rem',
+        fontFamily: "'Fira Code', monospace",
+    },
+    backButton: {
+        backgroundColor: '#ff9500',
+        color: '#1a1a1a',
+        border: 'none',
+        borderRadius: '8px',
+        padding: '0.75rem 2rem',
+        fontSize: '1rem',
+        fontFamily: "'Fira Code', monospace",
+        fontWeight: 600,
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+    },
+    completeContainer: {
+        textAlign: 'center' as const,
+        padding: '3rem',
+    },
+    completeEmoji: {
+        fontSize: '4rem',
+        marginBottom: '1rem',
+    },
+    completeTitle: {
+        color: '#ff9500',
+        fontSize: '2rem',
+        marginBottom: '1rem',
+        fontFamily: "'Fira Code', monospace",
+        fontWeight: 700,
+    },
+    completeText: {
+        color: '#e0e0e0',
+        fontSize: '1.1rem',
+        marginBottom: '2rem',
+        fontFamily: "'Fira Code', monospace",
+    },
+};
 
 function QuizPage() {
     const location = useLocation();
@@ -7,19 +137,39 @@ function QuizPage() {
 
     const navigate = useNavigate();
 
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [finished, setFinished] = useState(false);
+    const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+
     if (!quiz.length) {
         return (
-            <div>
-                <p>No quiz data found. Go back and generate a quiz first.</p>
-                <button onClick={() => navigate('/')}>Back</button>
+            <div style={quizStyles.container}>
+                <Navbar />
+                <div style={quizStyles.content}>
+                    <div style={{ ...quizStyles.card, ...quizStyles.emptyState }}>
+                        <p style={quizStyles.emptyText}>No quiz data found. Go back and generate a quiz first.</p>
+                        <button 
+                            style={quizStyles.backButton} 
+                            onClick={() => navigate('/prompt')}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 149, 0, 0.4)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = 'none';
+                            }}
+                        >
+                            Back to Prompt
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     }
 
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [finished, setFinished] = useState(false);
-
     const currentQ = quiz[currentIndex];
+    const progress = ((currentIndex) / quiz.length) * 100;
 
     function handleAnswer(option: string, index: number) {
         console.log("Selected option:", option);
@@ -28,41 +178,106 @@ function QuizPage() {
         const isCorrect = letterFromIndex === currentQ.correct_answer;
 
         if (!isCorrect) {
-            alert("Incorrect! Try again.");
+            setFeedbackMessage("❌ Incorrect! Try again.");
+            setTimeout(() => setFeedbackMessage(null), 1500);
             return;
         }
 
-        if (currentIndex + 1 < quiz.length) {
-            setCurrentIndex(currentIndex + 1);
-        } else {
-            setFinished(true);
-        }
+        setFeedbackMessage("✅ Correct!");
+        setTimeout(() => {
+            setFeedbackMessage(null);
+            if (currentIndex + 1 < quiz.length) {
+                setCurrentIndex(currentIndex + 1);
+            } else {
+                setFinished(true);
+            }
+        }, 800);
     }
 
-
     if (finished) {
-        <h1>Quiz Complete! 🎉</h1>;
-        <button onClick={() => navigate('/')}>Go Home</button>;
+        return (
+            <div style={quizStyles.container}>
+                <Navbar />
+                <div style={quizStyles.content}>
+                    <div style={{ ...quizStyles.card, ...quizStyles.completeContainer }}>
+                        <div style={quizStyles.completeEmoji}>🎉</div>
+                        <h1 style={quizStyles.completeTitle}>Quiz Complete!</h1>
+                        <p style={quizStyles.completeText}>Great job! You've completed all {quiz.length} questions.</p>
+                        <button 
+                            style={quizStyles.backButton} 
+                            onClick={() => navigate('/prompt')}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 149, 0, 0.4)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = 'none';
+                            }}
+                        >
+                            Create Another Quiz
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     if (!currentQ) {
-        return <p>No quiz data found</p>;
+        return <p style={{ color: '#808080', textAlign: 'center', padding: '2rem' }}>No quiz data found</p>;
     }
 
     return (
-        <div style={{ padding: "2rem" }}>
-            <h2>{currentQ.title}</h2>
+        <div style={quizStyles.container}>
+            <Navbar />
+            <div style={quizStyles.content}>
+                <div style={quizStyles.card}>
+                    <p style={quizStyles.progressText}>Question {currentIndex + 1} of {quiz.length}</p>
+                    <div style={quizStyles.progressBar}>
+                        <div style={quizStyles.progressFill(progress)}></div>
+                    </div>
 
-            <h3>{currentQ.question}</h3>
+                    <h2 style={quizStyles.title}>{currentQ.title}</h2>
+                    <h3 style={quizStyles.question}>{currentQ.question}</h3>
 
-            {currentQ.options.map((opt: string, i: number) => (
-                <div key={i}>
-                    <button onClick={() => handleAnswer(opt, i)}>
-                        {opt}
-                    </button>
-                    <br/>
+                    {feedbackMessage && (
+                        <div style={{
+                            padding: '0.75rem 1rem',
+                            borderRadius: '8px',
+                            marginBottom: '1rem',
+                            backgroundColor: feedbackMessage.includes('Correct') ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)',
+                            color: feedbackMessage.includes('Correct') ? '#4caf50' : '#f44336',
+                            fontFamily: "'Fira Code', monospace",
+                            textAlign: 'center' as const,
+                        }}>
+                            {feedbackMessage}
+                        </div>
+                    )}
+
+                    <div style={quizStyles.optionsContainer}>
+                        {currentQ.options.map((opt: string, i: number) => (
+                            <button 
+                                key={i}
+                                style={quizStyles.optionButton}
+                                onClick={() => handleAnswer(opt, i)}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.borderColor = '#ff9500';
+                                    e.currentTarget.style.backgroundColor = '#454545';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.borderColor = '#4d4d4d';
+                                    e.currentTarget.style.backgroundColor = '#3d3d3d';
+                                }}
+                            >
+                                <span style={quizStyles.optionLetter}>
+                                    {["A", "B", "C", "D"][i]}
+                                </span>
+                                {opt}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            ))}
+            </div>
         </div>
     );
 }

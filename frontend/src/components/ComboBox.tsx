@@ -1,10 +1,16 @@
 import '../css-files/ComboBox.css'
 
-function ComboBox(){
+interface ComboBoxProps {
+    selectedModel: string;
+    onModelChange: (model: string) => void;
+}
+
+function ComboBox({ selectedModel, onModelChange }: ComboBoxProps){
 
     function handleChange(e : React.ChangeEvent<HTMLSelectElement>){
         const selectModel = e.target.value;
         console.log(selectModel);
+        onModelChange(selectModel);
         
         try{
             fetch("http://127.0.0.1:8000/model", {
@@ -20,7 +26,7 @@ function ComboBox(){
 
     return(
         <div className='combo-box-container'>
-            <select className='model-select' defaultValue="" onChange={handleChange}>
+            <select className='model-select' value={selectedModel} onChange={handleChange}>
                 <option value="" disabled hidden>
                     Choose a model…
                 </option>

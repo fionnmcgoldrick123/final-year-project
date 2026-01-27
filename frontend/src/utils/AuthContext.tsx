@@ -28,43 +28,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    // Check for existing token on mount
+    // Clear storage on app boot to ensure no user is logged in initially
     useEffect(() => {
-        const storedToken = localStorage.getItem('token');
-        const storedUser = localStorage.getItem('user');
-        
-        if (storedToken && storedUser) {
-            setToken(storedToken);
-            setUser(JSON.parse(storedUser));
-            // Verify token is still valid
-            fetchUserProfile(storedToken);
-        } else {
-            setIsLoading(false);
-        }
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+        setToken(null);
+        setIsLoading(false);
     }, []);
-
-    const fetchUserProfile = async (authToken: string) => {
-        try {
-            const response = await fetch('http://127.0.0.1:8000/me', {
-                headers: {
-                    'Authorization': `Bearer ${authToken}`
-                }
-            });
-            
-            if (response.ok) {
-                const userData = await response.json();
-                setUser(userData);
-                localStorage.setItem('user', JSON.stringify(userData));
-            } else {
-                // Token invalid, clear storage
-                logout();
-            }
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
         try {
