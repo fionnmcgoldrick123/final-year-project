@@ -106,3 +106,126 @@
         max-width: 400px;
     }
 }
+
+/* Quiz Type Selection */
+.quiz-type-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.quiz-type-wrapper {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.quiz-type-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px 32px;
+    background-color: #2d2d2d;
+    border: 2px solid #3d3d3d;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.quiz-type-button:hover {
+    border-color: #ff9500;
+    background-color: #333333;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 149, 0, 0.2);
+}
+
+.quiz-type-button.active {
+    border-color: #ff9500;
+    background: linear-gradient(135deg, rgba(255, 149, 0, 0.15) 0%, rgba(255, 119, 0, 0.1) 100%);
+    box-shadow: 0 0 20px rgba(255, 149, 0, 0.3);
+}
+
+.quiz-type-icon {
+    font-size: 2rem;
+}
+
+.quiz-type-label {
+    color: #ff9500;
+    font-family: 'Fira Code', monospace;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.quiz-type-desc {
+    color: #808080;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+/* Language Selection */
+.language-select-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.language-select {
+    padding: 12px 16px;
+    border: 2px solid #ff9500;
+    border-radius: 8px;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    min-width: 220px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff9500' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 20px;
+    padding-right: 40px;
+}
+
+.language-select:hover {
+    border-color: #ff7700;
+    box-shadow: 0 6px 16px rgba(255, 149, 0, 0.3);
+}
+
+.language-select:focus {
+    outline: none;
+    border-color: #ff9500;
+    box-shadow: 0 0 20px rgba(255, 149, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.2);
+    background-color: #333333;
+}
+
+.language-select option {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    padding: 8px;
+}
+
+@media (max-width: 768px) {
+    .quiz-type-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .quiz-type-button {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .language-select {
+        min-width: 100%;
+        max-width: 300px;
+    }
+}
